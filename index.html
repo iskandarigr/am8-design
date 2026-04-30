@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A/M-8 Design Studio — Web Design, Logo Design & Brand Identity. Let's build something extraordinary.">
+<meta property="og:title" content="A/M-8 — Design Studio">
+<meta property="og:description" content="Web Design · Logo Design · Brand Identity · UI/UX">
+<meta property="og:type" content="website">
+<title>A/M-8 — Design Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --black: #060608; --white: #f0eeea; --red: #ff2442;
+  --dim: #131318; --mid: #1e1e26; --border: rgba(255,255,255,0.07);
+}
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; overflow-x: hidden; }
+
+/* CURSOR desktop only */
+@media (pointer: fine) { body { cursor: none; } #cur,#cur-r { display: block; } }
+#cur,#cur-r { display: none; }
+#cur { position:fixed;width:10px;height:10px;background:var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;mix-blend-mode:difference; }
+#cur-r { position:fixed;width:36px;height:36px;border:1px solid rgba(255,36,66,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s; }
+
+/* SCANLINES */
+body::before { content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:500; }
+
+/* NAV */
+nav { position:fixed;top:0;left:0;right:0;z-index:400;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2.5rem;border-bottom:1px solid var(--border);backdrop-filter:blur(16px);background:rgba(6,6,8,.8); }
+.nav-logo { font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.15em; }
+.nav-logo em { color:var(--red);font-style:normal; }
+.nav-right { display:flex;align-items:center;gap:1.5rem; }
+.status-pill { display:flex;align-items:center;gap:.5rem;padding:.35rem .85rem;border:1px solid rgba(34,255,136,.2);border-radius:999px;font-family:'Rajdhani',sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,238,234,.4); }
+.dot { width:6px;height:6px;background:#22ff88;border-radius:50%;animation:blink 2s ease-in-out infinite; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.nav-cta { padding:.5rem 1.2rem;background:var(--red);color:var(--black);font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:opacity .2s; }
+.nav-cta:hover { opacity:.85; }
+@media(max-width:600px){ nav{padding:1rem 1.2rem;} .status-pill{display:none;} .nav-cta{font-size:.7rem;padding:.45rem 1rem;} }
+
+/* HERO */
+#hero { min-height:100svh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:7rem 2rem 5rem; }
+.grid-bg { position:absolute;inset:0;background-image:linear-gradient(rgba(255,36,66,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,36,66,.035) 1px,transparent 1px);background-size:55px 55px;animation:gridMove 25s linear infinite; }
+@keyframes gridMove{to{transform:translateY(55px)}}
+.hero-glow { position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(255,36,66,.13) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);animation:glowPulse 5s ease-in-out infinite; }
+@keyframes glowPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.18)}}
+.brk { position:absolute;width:30px;height:30px;opacity:.25; }
+.brk-tl{top:5.5rem;left:1.5rem;border-top:1px solid var(--red);border-left:1px solid var(--red);}
+.brk-tr{top:5.5rem;right:1.5rem;border-top:1px solid var(--red);border-right:1px solid var(--red);}
+.brk-bl{bottom:1.5rem;left:1.5rem;border-bottom:1px solid var(--red);border-left:1px solid var(--red);}
+.brk-br{bottom:1.5rem;right:1.5rem;border-bottom:1px solid var(--red);border-right:1px solid var(--red);}
+.hero-inner { position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center; }
+.hero-tag { font-family:'Rajdhani',sans-serif;font-size:.72rem;letter-spacing:.4em;text-transform:uppercase;color:var(--red);margin-bottom:1.2rem;opacity:0;animation:up .7s .2s forwards; }
+.hero-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(6rem,22vw,15rem);line-height:.88;letter-spacing:-.01em;opacity:0;animation:up .8s .4s forwards; }
+.hero-title .sl{color:var(--red);animation:flick 4s 2s infinite;}
+.hero-title .ds{color:rgba(240,238,234,.25);}
+@keyframes flick{0%,93%,100%{opacity:1}95%{opacity:.1}97%{opacity:1}99%{opacity:.3}}
+.hero-sub { font-size:clamp(.6rem,1.3vw,.8rem);color:rgba(240,238,234,.35);letter-spacing:.15em;margin-top:1.8rem;opacity:0;animation:up .7s .7s forwards; }
+.hero-btns { display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2.5rem;opacity:0;animation:up .7s .9s forwards; }
+.btn-primary { display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;background:var(--red);color:var(--black);font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:opacity .2s,transform .2s; }
+.btn-primary:hover{opacity:.88;transform:translateY(-1px);}
+.btn-secondary { display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;border:1px solid rgba(240,238,234,.15);color:rgba(240,238,234,.6);font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:border-color .2s,color .2s; }
+.btn-secondary:hover{border-color:var(--red);color:var(--white);}
+.scroll-hint { position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:0;animation:up .6s 1.2s forwards; }
+.scroll-hint span { font-family:'Rajdhani',sans-serif;font-size:.6rem;letter-spacing:.3em;color:rgba(240,238,234,.25);text-transform:uppercase; }
+.scroll-line { width:1px;height:40px;background:linear-gradient(to bottom,var(--red),transparent);animation:drop 2s ease-in-out infinite; }
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top;opacity:1}50%{transform:scaleY(1);transform-origin:top;opacity:1}100%{transform:scaleY(1);transform-origin:bottom;opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* MARQUEE */
+.marquee-wrap { overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1rem 0;background:var(--dim); }
+.marquee-track { display:flex;gap:1.5rem;white-space:nowrap;animation:mq 16s linear infinite; }
+.marquee-track span { font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.2em;color:rgba(240,238,234,.18);flex-shrink:0; }
+.marquee-track em { color:var(--red);font-style:normal; }
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section { padding:6rem 2.5rem; }
+@media(max-width:600px){ section{padding:4rem 1.2rem;} }
+.s-label { font-family:'Rajdhani',sans-serif;font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--red);margin-bottom:.8rem; }
+.s-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,6vw,4.5rem);line-height:1;margin-bottom:3rem; }
+
+/* SERVICES */
+.services-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border); }
+.svc { background:var(--black);padding:2.2rem;position:relative;overflow:hidden;transition:background .3s; }
+.svc::after { content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--red);transition:height .4s; }
+.svc:hover{background:var(--dim);} .svc:hover::after{height:100%;}
+.svc-n { font-family:'Bebas Neue',sans-serif;font-size:3rem;color:rgba(255,36,66,.1);line-height:1;margin-bottom:.8rem;transition:color .3s; }
+.svc:hover .svc-n{color:rgba(255,36,66,.22);}
+.svc-name { font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem; }
+.svc-price { font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--red);margin-bottom:.7rem; }
+.svc-desc { font-size:.68rem;line-height:1.85;color:rgba(240,238,234,.38); }
+
+/* PROCESS */
+#process { background:var(--dim); }
+.process-steps { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;counter-reset:step; }
+.step { position:relative;padding-top:1.2rem;border-top:1px solid var(--border);counter-increment:step; }
+.step::before { content:"0" counter(step);font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:rgba(255,36,66,.15);display:block;margin-bottom:.5rem; }
+.step h3 { font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem; }
+.step p { font-size:.68rem;line-height:1.8;color:rgba(240,238,234,.38); }
+
+/* PORTFOLIO */
+.work-grid { display:grid;grid-template-columns:1fr 1fr;gap:.8rem; }
+.work-grid .wi:first-child{grid-column:1/3;}
+.wi { position:relative;overflow:hidden;background:var(--dim);aspect-ratio:16/9; }
+.wi:first-child{aspect-ratio:21/8;}
+.wi canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.wi-overlay { position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,8,.9) 0%,transparent 55%);opacity:0;transition:opacity .35s;display:flex;align-items:flex-end;padding:1.5rem; }
+.wi:hover .wi-overlay{opacity:1;}
+.wi-info h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.06em;}
+.wi-info p{font-size:.62rem;color:var(--red);letter-spacing:.2em;text-transform:uppercase;margin-top:.2rem;}
+@media(max-width:600px){ .work-grid{grid-template-columns:1fr;} .work-grid .wi:first-child{grid-column:1;aspect-ratio:16/9;} }
+
+/* FAQ */
+#faq { background:var(--dim); }
+.faq-list{display:flex;flex-direction:column;gap:.5rem;max-width:760px;}
+.faq-item{border:1px solid var(--border);overflow:hidden;}
+.faq-q{width:100%;padding:1.1rem 1.4rem;display:flex;justify-content:space-between;align-items:center;background:none;border:none;color:var(--white);font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.05em;text-align:left;cursor:pointer;transition:color .2s;}
+.faq-q:hover{color:var(--red);}
+.faq-icon{font-size:1.2rem;flex-shrink:0;color:var(--red);transition:transform .3s;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;font-size:.72rem;line-height:1.9;color:rgba(240,238,234,.4);padding:0 1.4rem;}
+.faq-item.open .faq-a{max-height:200px;padding:0 1.4rem 1.2rem;}
+
+/* CONTACT */
+#contact { display:grid;grid-template-columns:1fr 1.2fr;gap:4rem;align-items:start;border-top:1px solid var(--border); }
+@media(max-width:780px){ #contact{grid-template-columns:1fr;gap:2.5rem;} }
+.c-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,8vw,5.5rem);line-height:.9;margin-bottom:2rem; }
+.c-title em{color:var(--red);font-style:normal;}
+.contact-info{display:flex;flex-direction:column;gap:.8rem;margin-bottom:2rem;}
+.c-info-row{display:flex;align-items:center;gap:.8rem;font-size:.72rem;color:rgba(240,238,234,.45);}
+.c-info-row svg{flex-shrink:0;opacity:.5;}
+.socials{display:flex;gap:.8rem;flex-wrap:wrap;}
+.social-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.1rem;border:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,238,234,.5);text-decoration:none;transition:border-color .2s,color .2s;}
+.social-btn:hover{border-color:var(--red);color:var(--white);}
+
+/* WHATSAPP FLOAT */
+.wa-float{position:fixed;bottom:1.8rem;right:1.8rem;display:flex;align-items:center;gap:.6rem;padding:.8rem 1.4rem;background:#25d366;color:#000;font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:999px;box-shadow:0 4px 24px rgba(37,211,102,.3);z-index:300;transition:transform .2s,box-shadow .2s;animation:up .6s 1.5s both;}
+.wa-float:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(37,211,102,.4);}
+
+/* FORM */
+.cf{display:flex;flex-direction:column;gap:.9rem;}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:500px){.cf-row{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:.35rem;}
+.field label{font-family:'Rajdhani',sans-serif;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(240,238,234,.3);}
+.field input,.field textarea,.field select{background:var(--dim);border:1px solid rgba(255,255,255,.07);color:var(--white);font-family:'Space Mono',monospace;font-size:.75rem;padding:.85rem 1rem;outline:none;resize:none;transition:border-color .2s;appearance:none;}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--red);}
+.field select option{background:var(--dim);}
+.field textarea{min-height:90px;}
+.send-btn{align-self:flex-start;display:inline-flex;align-items:center;gap:.7rem;padding:.95rem 2.2rem;background:var(--red);color:var(--black);font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;border:none;cursor:pointer;transition:opacity .2s,transform .2s;}
+.send-btn:hover{opacity:.88;transform:translateY(-1px);}
+#form-msg{font-family:'Rajdhani',sans-serif;font-size:.78rem;letter-spacing:.1em;padding:.7rem 1rem;display:none;}
+#form-msg.ok{background:rgba(34,255,136,.08);color:#22ff88;border:1px solid rgba(34,255,136,.2);}
+#form-msg.err{background:rgba(255,36,66,.08);color:var(--red);border:1px solid rgba(255,36,66,.2);}
+
+/* FOOTER */
+footer{padding:1.5rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+footer span{font-size:.62rem;color:rgba(240,238,234,.2);letter-spacing:.1em;}
+.f-logo{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;color:rgba(240,238,234,.12);}
+.f-logo em{color:rgba(255,36,66,.35);font-style:normal;}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- WHATSAPP FLOAT BUTTON -->
+<a class="wa-float" href="https://wa.me/YOURNUMBER?text=Hi!%20I%20found%20you%20on%20Instagram%20and%20I%27m%20interested%20in%20your%20design%20services." target="_blank" rel="noopener">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  WhatsApp Me
+</a>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><em>A/</em>M-8</div>
+  <div class="nav-right">
+    <div class="status-pill"><div class="dot"></div>Available</div>
+    <a class="nav-cta" href="#contact">Hire Me</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="brk brk-tl"></div><div class="brk brk-tr"></div>
+  <div class="brk brk-bl"></div><div class="brk brk-br"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">// Design Studio — Open for Clients</div>
+    <h1 class="hero-title"><span class="sl">A/</span>M<span class="ds">-</span>8</h1>
+    <p class="hero-sub">WEB DESIGN &nbsp;·&nbsp; LOGO DESIGN &nbsp;·&nbsp; BRAND IDENTITY &nbsp;·&nbsp; UI/UX</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#contact">
+        Start a Project
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn-secondary" href="#work">View Work</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>WEB DESIGN</span><em>✦</em><span>LOGO CREATION</span><em>✦</em><span>BRAND IDENTITY</span><em>✦</em><span>UI/UX DESIGN</span><em>✦</em><span>VISUAL SYSTEMS</span><em>✦</em><span>SOCIAL MEDIA KITS</span><em>✦</em>
+    <span>WEB DESIGN</span><em>✦</em><span>LOGO CREATION</span><em>✦</em><span>BRAND IDENTITY</span><em>✦</em><span>UI/UX DESIGN</span><em>✦</em><span>VISUAL SYSTEMS</span><em>✦</em><span>SOCIAL MEDIA KITS</span><em>✦</em>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="s-label">// 001 — Services & Pricing</div>
+  <h2 class="s-title">What I Do</h2>
+  <div class="services-grid">
+    <div class="svc">
+      <div class="svc-n">01</div>
+      <div class="svc-name">Logo Design</div>
+      <div class="svc-price">From $50</div>
+      <p class="svc-desc">Distinctive marks that capture your brand's soul. Wordmarks, monograms, emblems — delivered in all formats (PNG, SVG, PDF).</p>
+    </div>
+    <div class="svc">
+      <div class="svc-n">02</div>
+      <div class="svc-name">Web Design</div>
+      <div class="svc-price">From $150</div>
+      <p class="svc-desc">High-converting, visually striking websites. Landing pages to full multi-page sites. Mobile-ready and built to impress.</p>
+    </div>
+    <div class="svc">
+      <div class="svc-n">03</div>
+      <div class="svc-name">Brand Identity</div>
+      <div class="svc-price">From $200</div>
+      <p class="svc-desc">Logo + colors + typography + business card + social kit. Everything your brand needs to look professional and consistent.</p>
+    </div>
+    <div class="svc">
+      <div class="svc-n">04</div>
+      <div class="svc-name">Social Media Kit</div>
+      <div class="svc-price">From $80</div>
+      <p class="svc-desc">Profile picture, banner, post templates, story highlights. Make your Instagram look elite, on-brand, and scroll-stopping.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="s-label">// 002 — How It Works</div>
+  <h2 class="s-title">The Process</h2>
+  <div class="process-steps">
+    <div class="step">
+      <h3>Discovery</h3>
+      <p>You tell me about your brand, goals, and style. We align on vision before anything is designed.</p>
+    </div>
+    <div class="step">
+      <h3>Concepts</h3>
+      <p>I create 2–3 unique concepts for you to review. You pick the direction that feels right.</p>
+    </div>
+    <div class="step">
+      <h3>Refine</h3>
+      <p>We polish together with revisions until it's exactly what you envisioned.</p>
+    </div>
+    <div class="step">
+      <h3>Deliver</h3>
+      <p>Final files in all formats. PNG, SVG, PDF, source files. You own 100% of the design.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="work">
+  <div class="s-label">// 003 — Portfolio</div>
+  <h2 class="s-title">Selected Work</h2>
+  <div class="work-grid">
+    <div class="wi"><canvas id="c1"></canvas>
+      <div class="wi-overlay"><div class="wi-info"><h3>Nexus Brand System</h3><p>Brand Identity · 2024</p></div></div>
+    </div>
+    <div class="wi"><canvas id="c2"></canvas>
+      <div class="wi-overlay"><div class="wi-info"><h3>Orbit Web App</h3><p>UI/UX Design · 2024</p></div></div>
+    </div>
+    <div class="wi"><canvas id="c3"></canvas>
+      <div class="wi-overlay"><div class="wi-info"><h3>Vanta Logo Suite</h3><p>Logo Design · 2025</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="s-label">// 004 — FAQ</div>
+  <h2 class="s-title">Questions</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q">How long does a project take? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Logo design: 3–5 days. Websites: 5–14 days depending on complexity. Rush delivery is available for an extra fee.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">How many revisions do I get? <span class="faq-icon">+</span></button>
+      <div class="faq-a">All packages include up to 3 rounds of revisions. I work until you're 100% satisfied with the result.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">How do I pay? <span class="faq-icon">+</span></button>
+      <div class="faq-a">I accept PayPal, bank transfer, and most major methods. 50% deposit to start, balance due on final delivery.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">What files will I receive? <span class="faq-icon">+</span></button>
+      <div class="faq-a">PNG (transparent background), SVG, PDF, and source files. You own 100% of the final design — no license fees ever.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Do you offer bundles? <span class="faq-icon">+</span></button>
+      <div class="faq-a">Yes! Combining services (logo + social kit, logo + website, etc.) gets you a discount. Message me for a custom quote.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left">
+    <div class="s-label">// 005 — Let's Work</div>
+    <h2 class="c-title">Got a<br>project<br>in<br><em>mind?</em></h2>
+    <div class="contact-info">
+      <div class="c-info-row">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        your@email.com
+      </div>
+      <div class="c-info-row">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        @yourusername
+      </div>
+    </div>
+    <div class="socials">
+      <a class="social-btn" href="https://instagram.com/yourusername" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Instagram
+      </a>
+      <a class="social-btn" href="https://wa.me/YOURNUMBER" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        WhatsApp
+      </a>
+      <a class="social-btn" href="https://behance.net/yourusername" target="_blank">Behance</a>
+    </div>
+  </div>
+
+  <div>
+    <div class="cf">
+      <div class="cf-row">
+        <div class="field"><label>Your Name</label><input type="text" id="f-name" placeholder="John Doe"></div>
+        <div class="field"><label>Email</label><input type="email" id="f-email" placeholder="john@email.com"></div>
+      </div>
+      <div class="field">
+        <label>Service Needed</label>
+        <select id="f-service">
+          <option value="">Select a service...</option>
+          <option>Logo Design — From $50</option>
+          <option>Web Design — From $150</option>
+          <option>Brand Identity — From $200</option>
+          <option>Social Media Kit — From $80</option>
+          <option>Bundle (Multiple Services)</option>
+          <option>Other / Not Sure</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Budget Range</label>
+        <select id="f-budget">
+          <option value="">Select budget...</option>
+          <option>Under $100</option>
+          <option>$100 – $300</option>
+          <option>$300 – $600</option>
+          <option>$600+</option>
+        </select>
+      </div>
+      <div class="field"><label>Project Details</label><textarea id="f-msg" placeholder="Tell me about your brand, style, and what you need..."></textarea></div>
+      <button class="send-btn" onclick="submitForm()">
+        Send Message
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+      <div id="form-msg"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 A/M-8 Design Studio</span>
+  <div class="f-logo"><em>A/</em>M-8</div>
+  <span>All Rights Reserved</span>
+</footer>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function a(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(a)})();
+  document.querySelectorAll('a,button,.svc,.wi,.faq-q').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';curR.style.width='56px';curR.style.height='56px';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';curR.style.width='36px';curR.style.height='36px';});
+  });
+}
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.parentElement,wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen)item.classList.add('open');
+  });
+});
+
+// FORM — opens email client (replace mailto with Formspree for no-code backend)
+function submitForm(){
+  const name=document.getElementById('f-name').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const service=document.getElementById('f-service').value;
+  const budget=document.getElementById('f-budget').value;
+  const msg=document.getElementById('f-msg').value.trim();
+  const fm=document.getElementById('form-msg');
+  if(!name||!email||!service||!msg){fm.className='err';fm.style.display='block';fm.textContent='Please fill in all required fields.';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){fm.className='err';fm.style.display='block';fm.textContent='Please enter a valid email address.';return;}
+  const subject=encodeURIComponent('Project Inquiry — '+service);
+  const body=encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nService: '+service+'\nBudget: '+budget+'\n\n'+msg);
+  window.location.href='mailto:your@email.com?subject='+subject+'&body='+body;
+  fm.className='ok';fm.style.display='block';fm.textContent='✓ Email client opening... Your message is ready to send!';
+}
+
+// CANVAS ANIMATIONS
+function makeCanvas(id,drawFn){
+  const c=document.getElementById(id);if(!c)return;
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;}
+  resize();new ResizeObserver(resize).observe(c.parentElement);
+  drawFn(c);
+}
+
+makeCanvas('c1',c=>{
+  const ctx=c.getContext('2d');let t=0;
+  (function f(){
+    ctx.fillStyle='#0a0a12';ctx.fillRect(0,0,c.width,c.height);
+    const cx=c.width/2,cy=c.height/2;
+    for(let i=0;i<6;i++){ctx.beginPath();ctx.arc(cx,cy,28+i*36,0,Math.PI*2);ctx.strokeStyle=`rgba(255,36,66,${.04+i*.025})`;ctx.lineWidth=1;ctx.stroke();}
+    ctx.save();ctx.translate(cx,cy);
+    ctx.rotate(t*.007);
+    const s=6,r=80;ctx.beginPath();
+    for(let i=0;i<s;i++){const a=(i/s)*Math.PI*2;i?ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r):ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);}
+    ctx.closePath();ctx.strokeStyle='rgba(255,36,66,.55)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.rotate(-t*.014);ctx.beginPath();
+    for(let i=0;i<s;i++){const a=(i/s)*Math.PI*2;i?ctx.lineTo(Math.cos(a)*44,Math.sin(a)*44):ctx.moveTo(Math.cos(a)*44,Math.sin(a)*44);}
+    ctx.closePath();ctx.strokeStyle='rgba(255,36,66,.28)';ctx.lineWidth=1;ctx.stroke();
+    ctx.restore();
+    ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fillStyle='#ff2442';ctx.fill();
+    t++;requestAnimationFrame(f);
+  })();
+});
+
+makeCanvas('c2',c=>{
+  const ctx=c.getContext('2d');let t=0;
+  (function f(){
+    ctx.fillStyle='rgba(10,10,18,.18)';ctx.fillRect(0,0,c.width,c.height);
+    const bars=22,bw=c.width/bars;
+    for(let i=0;i<bars;i++){
+      const h=(Math.sin(t*.028+i*.48)*.5+.5)*c.height*.72;
+      ctx.fillStyle=`rgba(255,36,66,${.07+(Math.sin(t*.02+i*.3)*.5+.5)*.18})`;
+      ctx.fillRect(i*bw+2,c.height-h,bw-4,h);
+    }
+    const sy=((t*1.4)%(c.height+30))-15;
+    ctx.fillStyle='rgba(255,36,66,.05)';ctx.fillRect(0,sy,c.width,2);
+    t++;requestAnimationFrame(f);
+  })();
+});
+
+makeCanvas('c3',c=>{
+  const ctx=c.getContext('2d');let t=0;
+  const pts=Array.from({length:55},()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,r:Math.random()*1.8+.4}));
+  (function f(){
+    ctx.fillStyle='rgba(8,8,14,.16)';ctx.fillRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;
+      if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(255,36,66,.65)';ctx.fill();
+    });
+    pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<85){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(255,36,66,${(1-d/85)*.18})`;ctx.lineWidth=.5;ctx.stroke();}
+    }));
+    t++;requestAnimationFrame(f);
+  })();
+});
+
+// SCROLL REVEAL
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='none';io.unobserve(e.target);}});
+},{threshold:.1});
+document.querySelectorAll('.svc,.step,.wi,.faq-item').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';
+  el.style.transition='opacity .55s ease, transform .55s ease';
+  io.observe(el);
+});
+</script>
+</body>
+</html>
