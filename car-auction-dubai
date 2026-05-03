@@ -1,0 +1,1478 @@
+import React, { useState, useEffect } from 'react';
+import { Car, Clock, Shield, TrendingUp, Plus, LogOut, BarChart3, DollarSign, Users, Mail, Eye, EyeOff } from 'lucide-react';
+
+const CarAuctionWebsite = () => {
+  const [currentPage, setCurrentPage] = useState('login');
+  const [userRole, setUserRole] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [users, setUsers] = useState({});
+  
+  // OWNER CREDENTIALS (ONLY ONE OWNER)
+  const OWNER_EMAIL = 'owner@dubaiauctioncar.com';
+  const OWNER_FACE_ID = 'OWNER123';
+  const COMPANY_NAME = 'Dubai Auction Cars';
+
+  const [cars, setCars] = useState([
+    {
+      id: 1,
+      name: '2023 BMW M4',
+      image: '🚗',
+      startPrice: 1000,
+      bids: [],
+      participants: 3,
+      status: 'upcoming',
+      auctionCode: 'A/M-8',
+      auctionTime: 'Today 8:00 PM',
+      category: 'Luxury',
+      details: { year: 2023, mileage: '5000 km', color: 'Black', condition: 'Excellent' },
+      pictures: [],
+      bio: 'Premium luxury sports car in excellent condition',
+      mileage: '5000 km',
+      transmission: 'Automatic',
+      fuelType: 'Petrol',
+      enginePower: '503 HP'
+    },
+    {
+      id: 2,
+      name: '2022 Mercedes C63',
+      image: '🏎️',
+      startPrice: 1000,
+      bids: [],
+      participants: 5,
+      status: 'upcoming',
+      auctionCode: 'A/M-8',
+      auctionTime: 'Today 8:00 PM',
+      category: 'Luxury',
+      details: { year: 2022, mileage: '8000 km', color: 'Silver', condition: 'Excellent' },
+      pictures: [],
+      bio: 'Premium Mercedes with full service history',
+      mileage: '8000 km',
+      transmission: 'Automatic',
+      fuelType: 'Petrol',
+      enginePower: '469 HP'
+    },
+    {
+      id: 3,
+      name: '2021 Audi RS6',
+      image: '🚙',
+      startPrice: 1000,
+      bids: [],
+      participants: 7,
+      status: 'upcoming',
+      auctionCode: 'A/M-8',
+      auctionTime: 'Today 8:00 PM',
+      category: 'Sports',
+      details: { year: 2021, mileage: '12000 km', color: 'Red', condition: 'Like New' },
+      pictures: [],
+      bio: 'High-performance sports car, like new condition',
+      mileage: '12000 km',
+      transmission: 'Automatic',
+      fuelType: 'Petrol',
+      enginePower: '592 HP'
+    }
+  ]);
+
+  const [auctionSchedule] = useState([
+    { code: 'A/M-8', name: 'Dubai Auction Car - Main Event', time: 'Today 8:00 PM', status: 'active', cars: 3 },
+    { code: 'A/M-9', name: 'Emirates Luxury Auction', time: 'Tomorrow 10:00 AM', status: 'scheduled', cars: 5 }
+  ]);
+
+  // ==================== LOGIN PAGE ====================
+  const LoginPage = () => {
+    const [role, setRole] = useState(null);
+    const [ownerEmail, setOwnerEmail] = useState('');
+    const [ownerFaceId, setOwnerFaceId] = useState('');
+    const [showFaceId, setShowFaceId] = useState(false);
+    const [formData, setFormData] = useState({ 
+      email: '', 
+      phone: '', 
+      country: '', 
+      city: '', 
+      passport: null 
+    });
+
+    const handleOwnerLogin = (e) => {
+      e.preventDefault();
+      if (ownerEmail === OWNER_EMAIL && ownerFaceId === OWNER_FACE_ID) {
+        const ownerUser = { 
+          id: 'owner-1', 
+          email: OWNER_EMAIL, 
+          phone: '+971-50-XXXXXX',
+          country: 'UAE',
+          city: 'Dubai',
+          role: 'owner',
+          joinedAuctions: [] 
+        };
+        setCurrentUser(ownerUser);
+        setUserRole('owner');
+        setCurrentPage('ownerDashboard');
+      } else {
+        alert('❌ Invalid Owner Credentials!\n\nDemo Owner:\nEmail: owner@dubaiauctioncar.com\nFace ID: OWNER123');
+        setOwnerEmail('');
+        setOwnerFaceId('');
+      }
+    };
+
+    const handleBidderSignup = (e) => {
+      e.preventDefault();
+      if (formData.email && formData.phone && formData.country && formData.city && formData.passport) {
+        const newUser = { 
+          ...formData, 
+          id: Date.now(), 
+          role: 'bidder',
+          joinedAuctions: [] 
+        };
+        setUsers(prev => ({ ...prev, [formData.email]: newUser }));
+        setCurrentUser(newUser);
+        setUserRole('bidder');
+        setCurrentPage('home');
+      } else {
+        alert('Please fill all fields including passport photo');
+      }
+    };
+
+    if (role === 'owner') {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-white mb-2">{COMPANY_NAME}</h1>
+              <p className="text-blue-300 text-lg">Owner Portal</p>
+            </div>
+
+            <div className="bg-slate-900/80 backdrop-blur-xl border border-purple-500/40 rounded-2xl p-8 shadow-2xl">
+              <form onSubmit={handleOwnerLogin} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Owner Email</label>
+                  <input
+                    type="email"
+                    value={ownerEmail}
+                    onChange={(e) => setOwnerEmail(e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-800 border border-purple-500/30 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+                    placeholder="owner@dubaiauctioncar.com"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">🔐 Face ID / Password</label>
+                  <div className="relative">
+                    <input
+                      type={showFaceId ? 'text' : 'password'}
+                      value={ownerFaceId}
+                      onChange={(e) => setOwnerFaceId(e.target.value)}
+                      className="w-full px-4 py-3 bg-slate-800 border border-purple-500/30 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+                      placeholder="••••••••••"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowFaceId(!showFaceId)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    >
+                      {showFaceId ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700 text-sm text-slate-300">
+                  <p className="font-semibold mb-2">Demo Credentials:</p>
+                  <p>Email: owner@dubaiauctioncar.com</p>
+                  <p>Face ID: OWNER123</p>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full mt-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-purple-600/50 transition-all"
+                >
+                  🔓 Owner Login
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRole(null);
+                    setOwnerEmail('');
+                    setOwnerFaceId('');
+                  }}
+                  className="w-full py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-all"
+                >
+                  ← Back
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (role === 'bidder') {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-white mb-2">{COMPANY_NAME}</h1>
+              <p className="text-blue-300 text-lg">Sign Up as Bidder</p>
+            </div>
+
+            <div className="bg-slate-900/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8 shadow-2xl">
+              <form onSubmit={handleBidderSignup} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-800 border border-blue-500/30 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                    placeholder="your@email.com"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-800 border border-blue-500/30 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                    placeholder="+971 50 XXX XXXX"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Country</label>
+                    <input
+                      type="text"
+                      value={formData.country}
+                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-800 border border-blue-500/30 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                      placeholder="UAE"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">City</label>
+                    <input
+                      type="text"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-800 border border-blue-500/30 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                      placeholder="Dubai"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">📋 Passport Photo</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setFormData({ ...formData, passport: e.target.files[0]?.name })}
+                    className="w-full px-4 py-3 bg-slate-800 border border-blue-500/30 rounded-lg text-slate-300 focus:outline-none focus:border-blue-500"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full mt-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all"
+                >
+                  Sign Up & Enter
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRole(null);
+                    setFormData({ email: '', phone: '', country: '', city: '', passport: null });
+                  }}
+                  className="w-full py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-all"
+                >
+                  ← Back
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="inline-block p-4 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mb-4">
+              <Car className="w-12 h-12 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold text-white mb-2">{COMPANY_NAME}</h1>
+            <p className="text-blue-300 text-lg">A/M-8</p>
+          </div>
+
+          <div className="bg-slate-900/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8 shadow-2xl space-y-4">
+            <button
+              onClick={() => setRole('bidder')}
+              className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all"
+            >
+              👤 Sign Up as Bidder
+            </button>
+
+            <button
+              onClick={() => setRole('owner')}
+              className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-lg hover:shadow-lg hover:shadow-purple-600/50 transition-all"
+            >
+              👑 Owner Login
+            </button>
+          </div>
+
+          <p className="text-center text-slate-400 text-sm mt-6">
+            🔒 Secure & Verified Platform
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  // ==================== HOME PAGE (BIDDER) ====================
+  const HomePage = () => {
+    const [selectedCar, setSelectedCar] = useState(null);
+
+    if (selectedCar) {
+      return <CarDetailPage car={selectedCar} onBack={() => setSelectedCar(null)} />;
+    }
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+        {/* Header */}
+        <header className="bg-slate-900/50 backdrop-blur-xl border-b border-blue-500/20 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold text-white">{COMPANY_NAME}</h1>
+                <p className="text-sm text-blue-300">A/M-8 Auction Platform</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-blue-300">{currentUser?.email}</p>
+                <button
+                  onClick={() => {
+                    setCurrentUser(null);
+                    setUserRole(null);
+                    setCurrentPage('login');
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 mt-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-7xl mx-auto px-4 py-12">
+          {/* Auction Info Banner */}
+          <div className="mb-12 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 border border-blue-500/50 rounded-2xl p-8 backdrop-blur-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">🔥 Today's Cars in Auction</h2>
+                <p className="text-blue-200">Exclusive selection of premium vehicles</p>
+              </div>
+              <div className="bg-slate-900/50 border border-blue-500/30 rounded-lg p-6">
+                <p className="text-slate-400 text-sm mb-2">📅 Active Auction</p>
+                <p className="text-2xl font-bold text-cyan-400 mb-2">A/M-8</p>
+                <p className="text-blue-200">Dubai Auction Car - Today 8:00 PM</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Cars Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {cars.map((car) => (
+              <div
+                key={car.id}
+                onClick={() => setSelectedCar(car)}
+                className="group cursor-pointer bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-xl overflow-hidden hover:border-blue-500/50 transition-all hover:shadow-xl hover:shadow-blue-500/20 hover:-translate-y-1"
+              >
+                <div className="relative h-48 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center overflow-hidden">
+                  <div className="text-6xl group-hover:scale-110 transition-transform duration-300">{car.image}</div>
+                  <div className="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                    {car.category}
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-3">{car.name}</h3>
+
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-slate-300">
+                      <DollarSign className="w-4 h-4 text-cyan-400" />
+                      <span>Starting: ${car.startPrice.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-300">
+                      <Users className="w-4 h-4 text-blue-400" />
+                      <span>{car.participants} bidders</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-300">
+                      <Clock className="w-4 h-4 text-cyan-400" />
+                      <span>{car.auctionTime}</span>
+                    </div>
+                  </div>
+
+                  <button className="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all">
+                    View & Join Auction
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Auction Schedule */}
+          <div>
+            <h3 className="text-2xl font-bold text-white mb-6">📅 Auction Schedule</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {auctionSchedule.map((auction, idx) => (
+                <div key={idx} className="bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <p className="text-sm text-blue-300 font-semibold">{auction.code}</p>
+                      <h4 className="text-xl font-bold text-white">{auction.name}</h4>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      auction.status === 'active'
+                        ? 'bg-green-500/30 text-green-300'
+                        : 'bg-blue-500/30 text-blue-300'
+                    }`}>
+                      {auction.status === 'active' ? '🔴 LIVE' : '⏰ Scheduled'}
+                    </span>
+                  </div>
+                  <p className="text-slate-300 mb-3">{auction.time}</p>
+                  <p className="text-sm text-slate-400">{auction.cars} cars available</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  };
+
+  // ==================== CAR DETAIL PAGE ====================
+  const CarDetailPage = ({ car, onBack }) => {
+    const [showJoinModal, setShowJoinModal] = useState(false);
+    const [showBiddingModal, setShowBiddingModal] = useState(false);
+    const [joinCode, setJoinCode] = useState(null);
+    const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+
+    const handleJoinAuction = () => {
+      const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+      setJoinCode(code);
+      setUsers(prev => ({
+        ...prev,
+        [currentUser.email]: {
+          ...prev[currentUser.email],
+          joinedAuctions: [...(prev[currentUser.email]?.joinedAuctions || []), { carId: car.id, code }]
+        }
+      }));
+      setShowJoinModal(false);
+      setShowEmailConfirmation(true);
+    };
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+        <header className="bg-slate-900/50 backdrop-blur-xl border-b border-blue-500/20 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-all"
+            >
+              ← Back
+            </button>
+            <h1 className="text-2xl font-bold text-white">{COMPANY_NAME}</h1>
+            <button
+              onClick={() => {
+                setCurrentUser(null);
+                setUserRole(null);
+                setCurrentPage('login');
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </div>
+        </header>
+
+        <main className="max-w-5xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Car Image & Details */}
+            <div className="bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8">
+              <div className="h-64 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center mb-6">
+                <div className="text-8xl">{car.image}</div>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-6">{car.name}</h2>
+
+              <div className="space-y-4 mb-8">
+                <div className="bg-slate-900/50 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Year</p>
+                  <p className="text-white font-semibold">{car.details.year}</p>
+                </div>
+                <div className="bg-slate-900/50 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Mileage</p>
+                  <p className="text-white font-semibold">{car.mileage}</p>
+                </div>
+                <div className="bg-slate-900/50 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Color</p>
+                  <p className="text-white font-semibold">{car.details.color}</p>
+                </div>
+                <div className="bg-slate-900/50 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Condition</p>
+                  <p className="text-white font-semibold">{car.details.condition}</p>
+                </div>
+              </div>
+
+              {/* Car Bio */}
+              {car.bio && (
+                <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                  <p className="text-slate-400 text-sm mb-2">📝 Description</p>
+                  <p className="text-white">{car.bio}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Action Panel */}
+            <div className="space-y-6">
+              {/* Info Box */}
+              <div className="bg-gradient-to-br from-blue-600/30 to-cyan-600/30 border border-blue-500/50 rounded-2xl p-8 backdrop-blur-xl">
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  Information About Car
+                </h3>
+                <div className="space-y-4 text-slate-200">
+                  <p>✓ Original documents verified</p>
+                  <p>✓ Full service history available</p>
+                  <p>✓ Accident-free certified</p>
+                  <p>✓ Insurance included for 6 months</p>
+                </div>
+              </div>
+
+              {/* Auction Info */}
+              <div className="bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6">
+                <p className="text-slate-400 text-sm mb-2">📅 Auction Details</p>
+                <p className="text-white font-semibold mb-3">{car.auctionCode} - {car.auctionTime}</p>
+                <p className="text-slate-300 text-sm">{car.participants} active bidders</p>
+              </div>
+
+              {/* Join Auction Button */}
+              {!currentUser?.joinedAuctions?.some(a => a.carId === car.id) ? (
+                <button
+                  onClick={() => setShowJoinModal(true)}
+                  className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold text-lg rounded-xl hover:shadow-lg hover:shadow-green-500/50 transition-all"
+                >
+                  🚀 Join Auction
+                </button>
+              ) : (
+                <button
+                  onClick={() => setShowBiddingModal(true)}
+                  className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg rounded-xl hover:shadow-lg hover:shadow-blue-500/50 transition-all"
+                >
+                  ⏱️ Enter Live Auction
+                </button>
+              )}
+
+              {/* Current Price */}
+              <div className="bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-xl p-6">
+                <p className="text-slate-400 text-sm mb-2">Starting Price</p>
+                <p className="text-4xl font-bold text-cyan-400">${car.startPrice.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Join Auction Modal */}
+        {showJoinModal && (
+          <JoinAuctionModal car={car} onClose={() => setShowJoinModal(false)} onJoin={handleJoinAuction} />
+        )}
+
+        {/* Email Confirmation Modal */}
+        {showEmailConfirmation && (
+          <EmailConfirmationModal code={joinCode} email={currentUser.email} carName={car.name} onClose={() => setShowEmailConfirmation(false)} onContinue={() => { setShowEmailConfirmation(false); setShowBiddingModal(true); }} />
+        )}
+
+        {/* Live Bidding Modal */}
+        {showBiddingModal && (
+          <LiveBiddingModal car={car} onClose={() => setShowBiddingModal(false)} />
+        )}
+      </div>
+    );
+  };
+
+  // ==================== JOIN AUCTION MODAL ====================
+  const JoinAuctionModal = ({ car, onClose, onJoin }) => {
+    const [formData, setFormData] = useState({ email: '', passport: null });
+
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-900 border border-blue-500/30 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+          <h3 className="text-2xl font-bold text-white mb-6">Register for Auction</h3>
+          
+          <div className="space-y-4 mb-6">
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-2">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                placeholder={currentUser.email}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-2">📋 Passport Photo</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFormData({ ...formData, passport: e.target.files[0]?.name })}
+                className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-slate-300"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onJoin}
+              className="flex-1 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-green-500/50 transition-all"
+            >
+              Register
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ==================== EMAIL CONFIRMATION MODAL ====================
+  const EmailConfirmationModal = ({ code, email, carName, onClose, onContinue }) => {
+    const [copied, setCopied] = useState(false);
+
+    const copyCode = () => {
+      navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-900 border border-blue-500/30 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+          {/* Email Header */}
+          <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 text-white">
+            <div className="flex justify-center mb-3">
+              <Mail className="w-10 h-10" />
+            </div>
+            <h3 className="text-2xl font-bold text-center">✅ Email Sent!</h3>
+            <p className="text-center text-green-100 mt-2">Check your inbox for your auction code</p>
+          </div>
+
+          {/* Content */}
+          <div className="p-8 space-y-6">
+            <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+              <p className="text-slate-400 text-sm mb-1">To:</p>
+              <p className="text-white font-semibold break-all">{email}</p>
+            </div>
+
+            {/* Code Display */}
+            <div className="bg-gradient-to-br from-blue-600/30 to-cyan-600/30 border-2 border-blue-500/50 rounded-lg p-6 text-center">
+              <p className="text-slate-400 text-sm mb-3">Your Unique Auction Code:</p>
+              <p className="text-4xl font-bold text-cyan-400 tracking-widest mb-4">{code}</p>
+              <p className="text-slate-500 text-xs">Keep this code safe. You'll need it to enter the live auction.</p>
+            </div>
+
+            <div className="bg-yellow-900/30 border border-yellow-700/50 rounded-lg p-3">
+              <p className="text-yellow-200 text-sm">
+                ⚠️ <span className="font-semibold">Important:</span> This code is unique to you. Do not share it.
+              </p>
+            </div>
+
+            {/* Copy Button */}
+            <button
+              onClick={copyCode}
+              className={`w-full py-3 rounded-lg font-semibold transition-all ${
+                copied
+                  ? 'bg-green-600 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+            >
+              {copied ? '✓ Code Copied!' : '📋 Copy Code'}
+            </button>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="bg-slate-800/50 border-t border-slate-700 p-6 flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-all"
+            >
+              Close
+            </button>
+            <button
+              onClick={onContinue}
+              className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:shadow-lg hover:shadow-green-600/50 text-white font-semibold rounded-lg transition-all"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ==================== LIVE BIDDING MODAL ====================
+  const LiveBiddingModal = ({ car, onClose }) => {
+    const [timeLeft, setTimeLeft] = useState(10);
+    const [currentPrice, setCurrentPrice] = useState(car.startPrice);
+    const [bidHistory, setBidHistory] = useState([]);
+    const [codeVerified, setCodeVerified] = useState(false);
+    const [enteredCode, setEnteredCode] = useState('');
+    const [codeError, setCodeError] = useState('');
+    const bidOptions = [250, 350, 500, 699, 1000];
+
+    const correctCode = currentUser?.joinedAuctions?.find(a => a.carId === car.id)?.code;
+
+    useEffect(() => {
+      if (!codeVerified) return;
+      
+      const timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev === 1) {
+            return 10;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }, [codeVerified]);
+
+    const getTimerColor = () => {
+      if (timeLeft <= 3) return 'text-red-500';
+      if (timeLeft <= 5) return 'text-yellow-500';
+      return 'text-cyan-400';
+    };
+
+    const handleVerifyCode = () => {
+      if (enteredCode === correctCode) {
+        setCodeVerified(true);
+        setCodeError('');
+      } else {
+        setCodeError('Invalid code. Check your email and try again.');
+      }
+    };
+
+    const handleBid = (amount) => {
+      const newPrice = currentPrice + amount;
+      setCurrentPrice(newPrice);
+      setBidHistory([...bidHistory, { user: currentUser.email, amount: newPrice, time: new Date().toLocaleTimeString() }]);
+      setTimeLeft(3);
+    };
+
+    // Code Verification Screen
+    if (!codeVerified) {
+      return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-blue-500/30 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-6 text-white">
+              <div className="flex justify-center mb-3">
+                <div className="text-4xl">🔐</div>
+              </div>
+              <h3 className="text-2xl font-bold text-center">Enter Auction Code</h3>
+              <p className="text-center text-blue-100 mt-2">Verify your code to enter live auction</p>
+            </div>
+
+            <div className="p-8 space-y-6">
+              <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                <p className="text-slate-400 text-sm mb-2">Car:</p>
+                <p className="text-white font-semibold">{car.name}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-300 mb-3">Code</label>
+                <input
+                  type="text"
+                  value={enteredCode}
+                  onChange={(e) => {
+                    setEnteredCode(e.target.value.toUpperCase());
+                    setCodeError('');
+                  }}
+                  placeholder="Enter code from email"
+                  className="w-full px-4 py-3 bg-slate-800 border-2 border-blue-500/30 rounded-lg text-white text-center text-2xl tracking-widest font-bold placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                />
+                {codeError && (
+                  <p className="text-red-400 text-sm mt-2">❌ {codeError}</p>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={onClose}
+                  className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-lg transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleVerifyCode}
+                  disabled={!enteredCode}
+                  className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:shadow-lg hover:shadow-blue-600/50 text-white font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Verify
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Live Auction Screen
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-900 border border-blue-500/30 rounded-2xl p-8 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-bold text-white">{car.name}</h3>
+            <button
+              onClick={onClose}
+              className="text-slate-400 hover:text-white text-2xl"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6 mb-8">
+            {/* Car with Timer */}
+            <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl h-64 flex items-center justify-center relative">
+              <div className="text-7xl">{car.image}</div>
+              <div className={`absolute inset-0 flex items-center justify-center pointer-events-none`}>
+                <div className={`text-5xl font-bold ${getTimerColor()} transition-colors duration-300`}>
+                  {timeLeft}s
+                </div>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="space-y-4">
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Current Price</p>
+                <p className="text-4xl font-bold text-cyan-400">${currentPrice.toLocaleString()}</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Active Bidders</p>
+                <p className="text-2xl font-bold text-white">{car.participants}</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Your Status</p>
+                <p className="text-lg font-bold text-green-400">✓ Verified</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bid Options */}
+          <div className="mb-6">
+            <p className="text-slate-300 font-semibold mb-3">💰 Quick Bid Amounts</p>
+            <div className="grid grid-cols-5 gap-2">
+              {bidOptions.map(amount => (
+                <button
+                  key={amount}
+                  onClick={() => handleBid(amount)}
+                  className="py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all text-sm"
+                >
+                  +${amount}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Bid History */}
+          <div className="bg-slate-800/30 rounded-lg p-4 max-h-32 overflow-y-auto mb-4">
+            <p className="text-slate-300 font-semibold mb-3">📊 Recent Bids</p>
+            {bidHistory.length > 0 ? (
+              bidHistory.slice(-5).map((bid, idx) => (
+                <p key={idx} className="text-slate-300 text-sm">
+                  💵 ${bid.amount.toLocaleString()} at {bid.time}
+                </p>
+              ))
+            ) : (
+              <p className="text-slate-500 text-sm">No bids yet. Be the first!</p>
+            )}
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-full py-3 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-700 transition-all"
+          >
+            Exit Auction
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // ==================== OWNER DASHBOARD ====================
+  const OwnerDashboard = () => {
+    const [showAddCarModal, setShowAddCarModal] = useState(false);
+    const [selectedCarForView, setSelectedCarForView] = useState(null);
+
+    const stats = {
+      totalEarnings: '$125,450',
+      todayEarnings: '$28,900',
+      totalCarsSold: 47,
+      activeCars: cars.length
+    };
+
+    const carsSoldStats = [
+      { category: 'Luxury', count: 28, percentage: 60 },
+      { category: 'Sports', count: 12, percentage: 25 },
+      { category: 'Sedan', count: 7, percentage: 15 }
+    ];
+
+    const handleAddCar = (newCar) => {
+      const car = {
+        id: cars.length + 1,
+        ...newCar,
+        bids: [],
+        participants: 0,
+        status: 'upcoming'
+      };
+      setCars([...cars, car]);
+      setShowAddCarModal(false);
+    };
+
+    const handleDeleteCar = (carId) => {
+      if (window.confirm('Are you sure you want to delete this car?')) {
+        setCars(cars.filter(c => c.id !== carId));
+        setSelectedCarForView(null);
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+        <header className="bg-slate-900/50 backdrop-blur-xl border-b border-blue-500/20 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold text-white">{COMPANY_NAME}</h1>
+                <p className="text-sm text-purple-300">👑 Owner Dashboard</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-blue-300">{currentUser?.email}</p>
+                <button
+                  onClick={() => {
+                    setCurrentUser(null);
+                    setUserRole(null);
+                    setCurrentPage('login');
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 mt-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all ml-auto"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-7xl mx-auto px-4 py-12">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div className="bg-gradient-to-br from-blue-600/30 to-cyan-600/30 border border-blue-500/50 rounded-2xl p-6 backdrop-blur-xl">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-slate-300 text-sm mb-2">Total Earnings</p>
+                  <p className="text-3xl font-bold text-white">{stats.totalEarnings}</p>
+                </div>
+                <DollarSign className="w-8 h-8 text-cyan-400" />
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-600/30 to-emerald-600/30 border border-green-500/50 rounded-2xl p-6 backdrop-blur-xl">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-slate-300 text-sm mb-2">Today's Earnings</p>
+                  <p className="text-3xl font-bold text-white">{stats.todayEarnings}</p>
+                </div>
+                <TrendingUp className="w-8 h-8 text-green-400" />
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-600/30 to-pink-600/30 border border-purple-500/50 rounded-2xl p-6 backdrop-blur-xl">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-slate-300 text-sm mb-2">Cars Sold</p>
+                  <p className="text-3xl font-bold text-white">{stats.totalCarsSold}</p>
+                </div>
+                <Car className="w-8 h-8 text-pink-400" />
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-600/30 to-red-600/30 border border-orange-500/50 rounded-2xl p-6 backdrop-blur-xl">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-slate-300 text-sm mb-2">Active Cars</p>
+                  <p className="text-3xl font-bold text-white">{stats.activeCars}</p>
+                </div>
+                <BarChart3 className="w-8 h-8 text-orange-400" />
+              </div>
+            </div>
+          </div>
+
+          {/* Add New Car Button */}
+          <button
+            onClick={() => setShowAddCarModal(true)}
+            className="mb-12 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all"
+          >
+            <Plus className="w-5 h-5" />
+            Add New Car to Auction
+          </button>
+
+          {/* Analytics */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <div className="bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8">
+              <h3 className="text-xl font-bold text-white mb-6">📊 Categories Sold</h3>
+              <div className="space-y-4">
+                {carsSoldStats.map((stat, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between mb-2">
+                      <span className="text-slate-300">{stat.category}</span>
+                      <span className="text-cyan-400 font-semibold">{stat.count} cars</span>
+                    </div>
+                    <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-blue-500 to-cyan-500 h-full"
+                        style={{ width: `${stat.percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8">
+              <h3 className="text-xl font-bold text-white mb-6">📅 Active Auctions</h3>
+              <div className="space-y-4">
+                {auctionSchedule.map((auction, idx) => (
+                  <div key={idx} className="bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-semibold text-white">{auction.name}</p>
+                        <p className="text-sm text-slate-400">{auction.code}</p>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        auction.status === 'active'
+                          ? 'bg-green-500/30 text-green-300'
+                          : 'bg-blue-500/30 text-blue-300'
+                      }`}>
+                        {auction.status === 'active' ? '🔴 LIVE' : '⏰'}
+                      </span>
+                    </div>
+                    <p className="text-slate-300 text-sm mt-2">{auction.time}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Listed Cars */}
+          <div className="bg-slate-800/50 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8">
+            <h3 className="text-xl font-bold text-white mb-6">🚗 Your Listed Cars</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cars.map((car) => (
+                <div
+                  key={car.id}
+                  onClick={() => setSelectedCarForView(car)}
+                  className="bg-slate-900/50 border border-slate-700 rounded-xl overflow-hidden hover:border-blue-500/50 cursor-pointer transition-all group"
+                >
+                  <div className="h-40 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
+                    <div className="text-5xl group-hover:scale-110 transition-transform">{car.image}</div>
+                  </div>
+                  <div className="p-4">
+                    <h4 className="font-semibold text-white mb-2">{car.name}</h4>
+                    <div className="space-y-1 text-sm text-slate-400 mb-3">
+                      <p>💰 Starting: ${car.startPrice.toLocaleString()}</p>
+                      <p>👥 Bidders: {car.participants}</p>
+                      <p>🕐 {car.auctionTime}</p>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCarForView(car);
+                      }}
+                      className="w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-semibold rounded hover:shadow-lg hover:shadow-blue-500/50 transition-all"
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+
+        {/* Add Car Modal */}
+        {showAddCarModal && (
+          <AddCarModal onClose={() => setShowAddCarModal(false)} onAdd={handleAddCar} />
+        )}
+
+        {/* View Car Details Modal */}
+        {selectedCarForView && (
+          <ViewCarDetailsModal 
+            car={selectedCarForView} 
+            onClose={() => setSelectedCarForView(null)}
+            onDelete={() => handleDeleteCar(selectedCarForView.id)}
+          />
+        )}
+      </div>
+    );
+  };
+
+  // ==================== ADD CAR MODAL ====================
+  const AddCarModal = ({ onClose, onAdd }) => {
+    const [formData, setFormData] = useState({
+      name: '',
+      startPrice: 1000,
+      category: 'Luxury',
+      auctionCode: 'A/M-8',
+      auctionTime: 'Today 8:00 PM',
+      details: { year: 2024, mileage: '0 km', color: 'Black', condition: 'Excellent' },
+      pictures: [],
+      bio: '',
+      mileage: '0 km',
+      transmission: 'Automatic',
+      fuelType: 'Petrol',
+      enginePower: 'N/A'
+    });
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (!formData.name || !formData.startPrice) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      onAdd({ ...formData, image: '🚗' });
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-900 border border-blue-500/30 rounded-2xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+          <h3 className="text-2xl font-bold text-white mb-6">📸 Add New Car to Auction</h3>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Basic Info */}
+            <div className="border-b border-slate-700 pb-6">
+              <h4 className="text-lg font-semibold text-white mb-4">Basic Information</h4>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Car Name *</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    placeholder="e.g., 2023 BMW M4"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Starting Price ($) *</label>
+                    <input
+                      type="number"
+                      value={formData.startPrice}
+                      onChange={(e) => setFormData({ ...formData, startPrice: parseInt(e.target.value) })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Category *</label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    >
+                      <option>Luxury</option>
+                      <option>Sports</option>
+                      <option>Sedan</option>
+                      <option>SUV</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Auction Code</label>
+                    <input
+                      type="text"
+                      value={formData.auctionCode}
+                      onChange={(e) => setFormData({ ...formData, auctionCode: e.target.value })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                      placeholder="e.g., A/M-8"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Auction Time</label>
+                    <input
+                      type="text"
+                      value={formData.auctionTime}
+                      onChange={(e) => setFormData({ ...formData, auctionTime: e.target.value })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                      placeholder="e.g., Today 8:00 PM"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Car Specs */}
+            <div className="border-b border-slate-700 pb-6">
+              <h4 className="text-lg font-semibold text-white mb-4">Car Specifications</h4>
+              
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Year</label>
+                    <input
+                      type="number"
+                      value={formData.details.year}
+                      onChange={(e) => setFormData({ ...formData, details: { ...formData.details, year: parseInt(e.target.value) } })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Color</label>
+                    <input
+                      type="text"
+                      value={formData.details.color}
+                      onChange={(e) => setFormData({ ...formData, details: { ...formData.details, color: e.target.value } })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Mileage</label>
+                  <input
+                    type="text"
+                    value={formData.mileage}
+                    onChange={(e) => setFormData({ ...formData, mileage: e.target.value })}
+                    className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    placeholder="e.g., 5000 km"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Transmission</label>
+                    <select
+                      value={formData.transmission}
+                      onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    >
+                      <option>Automatic</option>
+                      <option>Manual</option>
+                      <option>CVT</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2">Fuel Type</label>
+                    <select
+                      value={formData.fuelType}
+                      onChange={(e) => setFormData({ ...formData, fuelType: e.target.value })}
+                      className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    >
+                      <option>Petrol</option>
+                      <option>Diesel</option>
+                      <option>Hybrid</option>
+                      <option>Electric</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Engine Power</label>
+                  <input
+                    type="text"
+                    value={formData.enginePower}
+                    onChange={(e) => setFormData({ ...formData, enginePower: e.target.value })}
+                    className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                    placeholder="e.g., 503 HP"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Condition</label>
+                  <select
+                    value={formData.details.condition}
+                    onChange={(e) => setFormData({ ...formData, details: { ...formData.details, condition: e.target.value } })}
+                    className="w-full px-4 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white"
+                  >
+                    <option>Excellent</option>
+                    <option>Very Good</option>
+                    <option>Good</option>
+                    <option>Fair</option>
+                    <option>Like New</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-4">📝 Car Description</h4>
+              <textarea
+                value={formData.bio}
+                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                className="w-full px-4 py-3 bg-slate-800 border border-blue-500/30 rounded-lg text-white resize-none"
+                placeholder="Describe the car's condition, features, and why it's special..."
+                rows="4"
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-3 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-700 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all"
+              >
+                🚀 Add Car
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  // ==================== VIEW CAR DETAILS MODAL ====================
+  const ViewCarDetailsModal = ({ car, onClose, onDelete }) => {
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-900 border border-blue-500/30 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-slate-900 border-b border-slate-700 px-8 py-4 flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-white">{car.name}</h2>
+            <button
+              onClick={onClose}
+              className="text-slate-400 hover:text-white text-2xl transition-all"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="p-8 space-y-6">
+            {/* Main Image */}
+            <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg h-80 flex items-center justify-center">
+              <div className="text-8xl">{car.image}</div>
+            </div>
+
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Year</p>
+                <p className="text-white font-semibold">{car.details.year}</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Mileage</p>
+                <p className="text-white font-semibold">{car.mileage}</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Color</p>
+                <p className="text-white font-semibold">{car.details.color}</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Transmission</p>
+                <p className="text-white font-semibold">{car.transmission}</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Fuel Type</p>
+                <p className="text-white font-semibold">{car.fuelType}</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded-lg">
+                <p className="text-slate-400 text-sm">Engine Power</p>
+                <p className="text-white font-semibold">{car.enginePower}</p>
+              </div>
+            </div>
+
+            {/* Bio */}
+            {car.bio && (
+              <div className="bg-slate-800/30 border border-slate-700 rounded-lg p-4">
+                <h4 className="font-semibold text-white mb-3">📝 Description</h4>
+                <p className="text-slate-300 leading-relaxed">{car.bio}</p>
+              </div>
+            )}
+
+            {/* Auction Info */}
+            <div className="bg-gradient-to-r from-blue-600/30 to-cyan-600/30 border border-blue-500/50 rounded-lg p-4">
+              <h4 className="font-semibold text-white mb-3">📅 Auction Details</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-slate-400 text-sm">Code</p>
+                  <p className="text-white font-semibold">{car.auctionCode}</p>
+                </div>
+                <div>
+                  <p className="text-slate-400 text-sm">Time</p>
+                  <p className="text-white font-semibold">{car.auctionTime}</p>
+                </div>
+                <div>
+                  <p className="text-slate-400 text-sm">Starting Price</p>
+                  <p className="text-cyan-400 font-semibold">${car.startPrice.toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="text-slate-400 text-sm">Current Bidders</p>
+                  <p className="text-white font-semibold">{car.participants}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={onClose}
+                className="flex-1 py-3 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-700 transition-all"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => { if (window.confirm('Delete this car?')) onDelete(); }}
+                className="flex-1 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-red-500/50 transition-all"
+              >
+                🗑️ Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ==================== MAIN RENDER ====================
+  return (
+    <div>
+      {currentPage === 'login' && <LoginPage />}
+      {currentPage === 'home' && userRole === 'bidder' && <HomePage />}
+      {currentPage === 'ownerDashboard' && userRole === 'owner' && <OwnerDashboard />}
+    </div>
+  );
+};
